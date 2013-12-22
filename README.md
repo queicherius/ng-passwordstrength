@@ -10,7 +10,7 @@ AngularJS directive for a password strength bar
 
 # Usage
 
-```
+```html
 <input type="password" ng-model="password" ng-password-strength>
 ```
 
