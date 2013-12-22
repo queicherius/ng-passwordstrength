@@ -1,6 +1,4 @@
 // This algorithm is inspired by the rules on http://www.passwordmeter.com
-// TODO refactor
-// TODO remove console.log
 application.factory('passwordStrength', function () {
 
     return {
@@ -16,7 +14,7 @@ application.factory('passwordStrength', function () {
                     'lowercaseCharacters',
                     'numbers',
                     'symbols',
-                    'middleNumberOrSymbols',
+                    'middleNumbersOrSymbols',
                     'requirements',
 
                     // Deductions
@@ -44,19 +42,9 @@ application.factory('passwordStrength', function () {
                 return undefined;
             }
 
-            console.group('Evaluating strength of password ' + password);
-
             for (i = 0; i != strength_modifiers.length; i++) {
-
-                var tmp = this[strength_modifiers[i]](password);
-                console.log(strength_modifiers[i], tmp);
-                strength += tmp;
-
+                strength += this[strength_modifiers[i]](password);
             }
-
-            console.log('Strength', strength);
-
-            console.groupEnd();
 
             return this.bounds(strength);
 
@@ -73,7 +61,7 @@ application.factory('passwordStrength', function () {
             if (count == 0) {
                 return 0;
             }
-            
+
             return (password.length - count) * 2;
 
         },
@@ -105,7 +93,7 @@ application.factory('passwordStrength', function () {
             return count * 6;
 
         },
-        middleNumberOrSymbols: function (password) {
+        middleNumbersOrSymbols: function (password) {
 
             var password = password.substring(1, password.length - 1),
                 matches = password.match(/([^\w]|[\d])/g),
@@ -163,41 +151,46 @@ application.factory('passwordStrength', function () {
         },
         repeatCharacters: function (password) {
 
-            var arrPwd = password.split(""),
-                arrPwdLen = arrPwd.length,
-                nRepInc = 0,
-                nRepChar = 0,
-                nUnqChar = 0,
-                bCharExists = false;
+            var password_characters = password.split(""),
+                deduction = 0,
+                repeated_characters = 0,
+                unique_characters = 0,
+                character_exists = false;
 
-            /* Loop through password to check for Symbol, Numeric, Lowercase and Uppercase pattern matches */
-            for (var a = 0; a < arrPwdLen; a++) {
+            for (var a = 0; a < password_characters.length; a++) {
 
-                /* Internal loop through password to check for repeat characters */
-                bCharExists = false;
+                character_exists = false;
 
-                for (var b = 0; b < arrPwdLen; b++) {
-                    if (arrPwd[a] == arrPwd[b] && a != b) { /* repeat character exists */
-                        bCharExists = true;
-                        /*
-                         Calculate increment deduction based on proximity to identical characters
-                         Deduction is incremented each time a new match is discovered
-                         Deduction amount is based on total password length divided by the
-                         difference of distance between currently selected match
-                         */
-                        nRepInc += Math.abs(arrPwdLen / (b - a));
+                for (var b = 0; b < password_characters.length; b++) {
+
+                    // Repeated character exists
+                    if (password_characters[a] == password_characters[b] && a != b) {
+
+                        character_exists = true;
+
+                        // Calculate deduction based on proximity to identical characters
+                        // Deduction is incremented each time a new match is discovered
+                        // Deduction amount is based on total password length divided by the
+                        // difference of distance between currently selected match
+                        deduction += Math.abs(password_characters.length / (b - a));
+
                     }
+
                 }
 
-                if (bCharExists) {
-                    nRepChar++;
-                    nUnqChar = arrPwdLen - nRepChar;
-                    nRepInc = (nUnqChar) ? Math.ceil(nRepInc / nUnqChar) : Math.ceil(nRepInc);
+                if (character_exists) {
+                    
+                    repeated_characters++;
+                    unique_characters = password_characters.length - repeated_characters;
+                    
+                    // Deduction is based on how many unique characters still exist
+                    deduction = (unique_characters) ? Math.ceil(deduction / unique_characters) : Math.ceil(deduction);
+                    
                 }
 
             }
 
-            return -nRepInc;
+            return -deduction;
 
         },
         consecutiveUppercaseCharacters: function (password) {
@@ -241,9 +234,9 @@ application.factory('passwordStrength', function () {
         sequentialCharacters: function (password) {
 
             var characters = "abcdefghijklmnopqrstuvwxyz" + // Alphabetical order
-                    "qwertzuiopasdfghjklyxcvbnm" + // German keyboard
-                    "qwertyuiopasdfghjklzxcvbnm" + // English keyboard
-                    "4bcd3f6h1jklmn0pqr57uvwxyz",  // Leetspeak
+                             "qwertzuiopasdfghjklyxcvbnm" + // German keyboard
+                             "qwertyuiopasdfghjklzxcvbnm" + // English keyboard
+                             "4bcd3f6h1jklmn0pqr57uvwxyz", // Leetspeak
                 count = this.sequentialCount(password, characters);
 
             return -(count * 6);
