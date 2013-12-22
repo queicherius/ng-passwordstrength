@@ -3,8 +3,64 @@
 // TODO remove console.log
 application.factory('passwordStrength', function () {
 
-    var calculations = {
+    return {
 
+        calculate: function (password) {
+
+            var strength = 0,
+                strength_modifiers = [
+
+                    // Additions
+                    'characters',
+                    'uppercaseCharacters',
+                    'lowercaseCharacters',
+                    'numbers',
+                    'symbols',
+                    'middleNumberOrSymbols',
+                    'requirements',
+
+                    // Deductions
+                    'lettersOnly',
+                    'numbersOnly',
+                    'repeatCharacters',
+                    'consecutiveUppercaseCharacters',
+                    'consecutiveLowercaseCharacters',
+                    'consecutiveNumbers',
+                    'sequentialCharacters',
+                    'sequentialNumbers',
+                    'sequentialSymbols',
+                    'dictionary'
+
+                ],
+                i = 0;
+
+            if (password === undefined) {
+                return undefined;
+            }
+
+            password = password.replace(/\s+/g, "");
+
+            if (password == '') {
+                return undefined;
+            }
+
+            console.group('Evaluating strength of password ' + password);
+
+            for (i = 0; i != strength_modifiers.length; i++) {
+
+                var tmp = this[strength_modifiers[i]](password);
+                console.log(strength_modifiers[i], tmp);
+                strength += tmp;
+
+            }
+
+            console.log('Strength', strength);
+
+            console.groupEnd();
+
+            return this.bounds(strength);
+
+        },
         characters: function (password) {
             return password.length * 4;
         },
@@ -17,7 +73,7 @@ application.factory('passwordStrength', function () {
             if (count == 0) {
                 return 0;
             }
-
+            
             return (password.length - count) * 2;
 
         },
@@ -147,7 +203,7 @@ application.factory('passwordStrength', function () {
         consecutiveUppercaseCharacters: function (password) {
 
             var regex = /[A-Z]{2,}/g,
-                count = this._consecutiveCount(password, regex);
+                count = this.consecutiveCount(password, regex);
 
             return -(count * 2);
 
@@ -155,7 +211,7 @@ application.factory('passwordStrength', function () {
         consecutiveLowercaseCharacters: function (password) {
 
             var regex = /[a-z]{2,}/g,
-                count = this._consecutiveCount(password, regex);
+                count = this.consecutiveCount(password, regex);
 
             return -(count * 2);
 
@@ -163,12 +219,12 @@ application.factory('passwordStrength', function () {
         consecutiveNumbers: function (password) {
 
             var regex = /[0-9]{2,}/g,
-                count = this._consecutiveCount(password, regex);
+                count = this.consecutiveCount(password, regex);
 
             return -(count * 2);
 
         },
-        _consecutiveCount: function (password, regex) {
+        consecutiveCount: function (password, regex) {
 
             var matches = password.match(regex),
                 matches = (matches == null) ? [] : matches,
@@ -188,7 +244,7 @@ application.factory('passwordStrength', function () {
                     "qwertzuiopasdfghjklyxcvbnm" + // German keyboard
                     "qwertyuiopasdfghjklzxcvbnm" + // English keyboard
                     "4bcd3f6h1jklmn0pqr57uvwxyz",  // Leetspeak
-                count = this._sequentialCount(password, characters);
+                count = this.sequentialCount(password, characters);
 
             return -(count * 6);
 
@@ -196,7 +252,7 @@ application.factory('passwordStrength', function () {
         sequentialNumbers: function (password) {
 
             var characters = "01234567890",
-                count = this._sequentialCount(password, characters);
+                count = this.sequentialCount(password, characters);
 
             return -(count * 6);
 
@@ -204,12 +260,12 @@ application.factory('passwordStrength', function () {
         sequentialSymbols: function (password) {
 
             var characters = ")!@#$%^&*()-+",
-                count = this._sequentialCount(password, characters);
+                count = this.sequentialCount(password, characters);
 
             return -(count * 2);
 
         },
-        _sequentialCount: function (password, characters) {
+        sequentialCount: function (password, characters) {
 
             var s,
                 character_triplet,
@@ -227,7 +283,7 @@ application.factory('passwordStrength', function () {
                 }
 
                 // Reverse
-                if (password.toLowerCase(reverse_character_triplet).indexOf() !== -1) {
+                if (password.toLowerCase().indexOf(reverse_character_triplet) !== -1) {
                     count++;
                 }
 
@@ -275,67 +331,6 @@ application.factory('passwordStrength', function () {
             }
 
             return strength;
-
-        }
-
-    };
-
-    return {
-
-        calculate: function (password) {
-
-            var strength = 0,
-                strength_modifiers = [
-
-                    // Additions
-                    'characters',
-                    'uppercaseCharacters',
-                    'lowercaseCharacters',
-                    'numbers',
-                    'symbols',
-                    'middleNumberOrSymbols',
-                    'requirements',
-
-                    // Deductions
-                    'lettersOnly',
-                    'numbersOnly',
-                    'repeatCharacters',
-                    'consecutiveUppercaseCharacters',
-                    'consecutiveLowercaseCharacters',
-                    'consecutiveNumbers',
-                    'sequentialCharacters',
-                    'sequentialNumbers',
-                    'sequentialSymbols',
-                    'dictionary'
-
-                ],
-                i = 0;
-
-            if (password === undefined) {
-                return undefined;
-            }
-
-            password = password.replace(/\s+/g, "");
-
-            if (password == '') {
-                return undefined;
-            }
-
-            console.group('Evaluating strength of password ' + password);
-
-            for (i = 0; i != strength_modifiers.length; i++) {
-
-                var tmp = calculations[strength_modifiers[i]](password);
-                console.log(strength_modifiers[i], tmp);
-                strength += tmp;
-
-            }
-
-            console.log('Strength', strength);
-
-            console.groupEnd();
-
-            return calculations.bounds(strength);
 
         }
 
