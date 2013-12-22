@@ -1,6 +1,8 @@
 # ng-passwordstrength
 
- AngularJS directive for a password strength bar
+AngularJS directive for a password strength bar
+
+![Demo image](https://raw.github.com/queicherius/ng-passwordstrength/master/demo.png)
 
 # Demo
 
