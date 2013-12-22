@@ -1,5 +1,8 @@
+/*jslint plusplus: true */
+/*global application:false*/
 // This algorithm is inspired by the rules on http://www.passwordmeter.com
 application.factory('passwordStrength', function () {
+    'use strict';
 
     return {
 
@@ -38,11 +41,11 @@ application.factory('passwordStrength', function () {
 
             password = password.replace(/\s+/g, "");
 
-            if (password == '') {
+            if (password === '') {
                 return undefined;
             }
 
-            for (i = 0; i != strength_modifiers.length; i++) {
+            for (i = 0; i !== strength_modifiers.length; i++) {
                 strength += this[strength_modifiers[i]](password);
             }
 
@@ -54,11 +57,15 @@ application.factory('passwordStrength', function () {
         },
         uppercaseCharacters: function (password) {
 
-            var password = password.substring(1, password.length), // First uppercase doesn't count
-                matches = password.match(/[A-Z]/g),
-                count = (matches == null) ? 0 : matches.length;
+            var matches, count;
 
-            if (count == 0) {
+            // First uppercase doesn't count
+            password = password.substring(1, password.length);
+
+            matches = password.match(/[A-Z]/g);
+            count = (matches === null) ? 0 : matches.length;
+
+            if (count === 0) {
                 return 0;
             }
 
@@ -67,10 +74,12 @@ application.factory('passwordStrength', function () {
         },
         lowercaseCharacters: function (password) {
 
-            var matches = password.match(/[a-z]/g),
-                count = (matches == null) ? 0 : matches.length;
+            var matches, count;
 
-            if (count == 0) {
+            matches = password.match(/[a-z]/g);
+            count = (matches === null) ? 0 : matches.length;
+
+            if (count === 0) {
                 return 0;
             }
 
@@ -79,25 +88,32 @@ application.factory('passwordStrength', function () {
         },
         numbers: function (password) {
 
-            var matches = password.match(/[\d]/g),
-                count = (matches == null) ? 0 : matches.length;
+            var matches, count;
 
-            return (count == password.length) ? 0 : count * 4;
+            matches = password.match(/[\d]/g);
+            count = (matches === null) ? 0 : matches.length;
+
+            return (count === password.length) ? 0 : count * 4;
 
         },
         symbols: function (password) {
 
-            var matches = password.match(/[^\w]/g),
-                count = (matches == null) ? 0 : matches.length;
+            var matches, count;
+
+            matches = password.match(/[^\w]/g);
+            count = (matches === null) ? 0 : matches.length;
 
             return count * 6;
 
         },
         middleNumbersOrSymbols: function (password) {
 
-            var password = password.substring(1, password.length - 1),
-                matches = password.match(/([^\w]|[\d])/g),
-                count = (matches == null) ? 0 : matches.length;
+            var matches, count;
+
+            password = password.substring(1, password.length - 1);
+
+            matches = password.match(/([^\w]|[\d])/g);
+            count = (matches === null) ? 0 : matches.length;
 
             return count * 2;
 
@@ -155,16 +171,18 @@ application.factory('passwordStrength', function () {
                 deduction = 0,
                 repeated_characters = 0,
                 unique_characters = 0,
+                character_exists = false,
+                a,
+                b;
+
+            for (a = 0; a < password_characters.length; a++) {
+
                 character_exists = false;
 
-            for (var a = 0; a < password_characters.length; a++) {
-
-                character_exists = false;
-
-                for (var b = 0; b < password_characters.length; b++) {
+                for (b = 0; b < password_characters.length; b++) {
 
                     // Repeated character exists
-                    if (password_characters[a] == password_characters[b] && a != b) {
+                    if (password_characters[a] === password_characters[b] && a !== b) {
 
                         character_exists = true;
 
@@ -179,13 +197,13 @@ application.factory('passwordStrength', function () {
                 }
 
                 if (character_exists) {
-                    
+
                     repeated_characters++;
                     unique_characters = password_characters.length - repeated_characters;
-                    
+
                     // Deduction is based on how many unique characters still exist
                     deduction = (unique_characters) ? Math.ceil(deduction / unique_characters) : Math.ceil(deduction);
-                    
+
                 }
 
             }
@@ -219,10 +237,10 @@ application.factory('passwordStrength', function () {
         },
         consecutiveCount: function (password, regex) {
 
-            var matches = password.match(regex),
-                matches = (matches == null) ? [] : matches,
-                i = 0,
-                count = 0;
+            var matches, i, count = 0;
+
+            matches = password.match(regex);
+            matches = (matches === null) ? [] : matches;
 
             for (i = 0; i < matches.length; i++) {
                 count += matches[i].length - 1;
