@@ -18,20 +18,20 @@ AngularJS directive for a password strength bar
 
 - [**passwordStrengthZxcvbn**](/scripts/services/passwordStrengthZxcvbn.js): this algorithm loads the algorithm from https://github.com/lowe/zxcvbn and gives a more realistic estimation, but loads 700kb worth of dictionaries
 - [**passwordStrength**](/scripts/services/passwordStrength.js): this algorithm is based on the rules from http://www.passwordmeter.com/ and gives a rough estimation. It evaluates passwords based on the following rules
-    - Number of Characters
-    - Uppercase Letters
-    - Lowercase Letters
+    - Number of characters
+    - Uppercase letters
+    - Lowercase letters
     - Numbers
     - Symbols
-    - Middle Numbers or Symbols
+    - Middle numbers or symbols
     - Requirements (Minimum 8 characters in length, Contains 3/4 of the following: Uppercase Letters, Lowercase Letters, Numbers, Symbols)
-    - Letters Only
-    - Numbers Only
-    - Repeat Characters (Case Insensitive)
-    - Consecutive Uppercase Letters
-    - Consecutive Lowercase Letters
-    - Consecutive Numbers
-    - Sequential Letters (3+)
-    - Sequential Numbers (3+)
-    - Sequential Symbols (3+)
+    - Letters only
+    - Numbers only
+    - Repeat characters
+    - Consecutive uppercase letters
+    - Consecutive lowercase letters
+    - Consecutive numbers
+    - Sequential letters (3+)
+    - Sequential numbers (3+)
+    - Sequential symbols (3+)
     - Small dictionary of most common passwords
