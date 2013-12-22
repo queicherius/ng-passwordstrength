@@ -1,0 +1,10 @@
+input {
+    padding: 10px;
+    font-size: 200%;
+    width: 500px;
+}
+
+.ng-password-strength-bar {
+    width: 525px;
+    height: 5px;
+}

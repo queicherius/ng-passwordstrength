@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="de" ng-app="app">
+<head>
+
+    <!-- Title -->
+    <title>ng-timeago</title>
+
+    <!-- Scripts -->
+    <script src="./scripts/vendor/angular.js"></script>
+    <script src="./scripts/app.js"></script>
+    <script src="./scripts/services/passwordStrength.js"></script>
+    <script src="./scripts/directives/ngPasswordStrength.js"></script>
+
+    <!-- Styles -->
+    <link href="./styles/directives/ngPasswordStrength.css" rel="stylesheet" type="text/css">
+    <link href="./styles/demo.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+    
+    <h1>passwordStrength</h1>
+    
+    <h2>Password</h2>
+    <input type="password" ng-model="password" ng-password-strength>
+    
+    <p>
+        <a href="./demo-zxcvbn.html">Demo with zxcvbn</a>
+    </p>
+
+</body>
+</html>
