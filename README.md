@@ -1,6 +1,8 @@
 # ng-passwordstrength
 
-AngularJS directive for a password strength bar
+[![No Maintenance Intended](https://img.shields.io/badge/No%20Maintenance%20Intended-%E2%9C%95-red.svg?style=flat-square)](http://unmaintained.tech/)
+
+> AngularJS directive for a password strength bar
 
 ![Demo image](https://raw.github.com/queicherius/ng-passwordstrength/master/demo.png)
 
